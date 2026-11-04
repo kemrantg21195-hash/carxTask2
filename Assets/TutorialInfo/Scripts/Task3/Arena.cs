@@ -2,68 +2,72 @@ using UnityEngine;
 
 public class Arena : MonoBehaviour
 {
-    public string heroClass = "Воин";
-    public int maxRounds = 10;
+    // Используем enum вместо строк, открываем для инспектора
+    [SerializeField] private UnitType m_heroClass = UnitType.Warrior;
+    [SerializeField] private int m_maxRounds = 10;
 
-    private Unit hero;
-    private Unit enemy;
+    // Код-стайл: префикс m_
+    private Unit m_hero;
+    private Unit m_enemy;
 
-    void Awake()
+    // Явно пишем private
+    private void Awake()
     {
-        if (heroClass == "Маг")
+        if (m_heroClass == UnitType.Mage)
         {
-            hero = new Unit("Маг", 130, 6, 12);
+            m_hero = new Unit(UnitType.Mage, 130, 6, 12);
         }
         else
         {
-            hero = new Unit("Воин", 100, 10, 16);
+            m_hero = new Unit(UnitType.Warrior, 100, 10, 16);
         }
 
         int randEnemy = Random.Range(0, 3);
         if (randEnemy == 0)
         {
-            enemy = new Unit("Гоблин", 50, 4, 8);
+            m_enemy = new Unit(UnitType.Goblin, 50, 4, 8);
         }
         else if (randEnemy == 1)
         {
-            enemy = new Unit("Орк", 80, 5, 10);
+            m_enemy = new Unit(UnitType.Orc, 80, 5, 10);
         }
         else
         {
-            enemy = new Unit("Тролль", 250, 20, 40);
+            m_enemy = new Unit(UnitType.Troll, 250, 20, 40);
         }
     }
 
-    void Start()
+    private void Start()
     {
-        Debug.Log(hero.unitClass + " (" + hero.health + " HP) против " + enemy.unitClass + " (" + enemy.health + " HP)");
+        // Перевод enum в строку для красивого вывода
+        Debug.Log(m_hero.unitClass.ToString() + " (" + m_hero.health + " HP) против " + m_enemy.unitClass.ToString() + " (" + m_enemy.health + " HP)");
 
-        for (int round = 1; round <= maxRounds; round++)
+        for (int round = 1; round <= m_maxRounds; round++)
         {
-            int heroDmg = hero.Attack();
-            enemy.TakeDamage(heroDmg);
+            int heroDmg = m_hero.Attack();
+            m_enemy.TakeDamage(heroDmg);
 
-            string roundText = "Раунд " + round + ": " + hero.unitClass + " наносит " + heroDmg + ", у противника " + enemy.health + " HP";
+            string roundText = "Раунд " + round + ": " + m_hero.unitClass.ToString() + " наносит " + heroDmg + ", у противника " + m_enemy.health + " HP";
 
-            if (enemy.health > 0)
+            if (m_enemy.health > 0)
             {
-                int enemyDmg = enemy.Attack();
-                hero.TakeDamage(enemyDmg);
-                roundText += "; " + enemy.unitClass + " наносит " + enemyDmg + ", у героя " + hero.health + " HP";
+                int enemyDmg = m_enemy.Attack();
+                m_hero.TakeDamage(enemyDmg);
+                roundText += "; " + m_enemy.unitClass.ToString() + " наносит " + enemyDmg + ", у героя " + m_hero.health + " HP";
             }
 
             Debug.Log(roundText);
 
-            if (hero.health == 0 || enemy.health == 0) break;
+            if (m_hero.health == 0 || m_enemy.health == 0) break;
         }
 
-        if (enemy.health == 0)
+        if (m_enemy.health == 0)
         {
-            Debug.Log("Победил герой, здоровье " + hero.health + " HP");
+            Debug.Log("Победил герой, здоровье " + m_hero.health + " HP");
         }
-        else if (hero.health == 0)
+        else if (m_hero.health == 0)
         {
-            Debug.Log("Победил противник, здоровье " + enemy.health + " HP");
+            Debug.Log("Победил противник, здоровье " + m_enemy.health + " HP");
         }
         else
         {
