@@ -2,15 +2,12 @@ using UnityEngine;
 
 public class Arena : MonoBehaviour
 {
-    // Используем enum вместо строк, открываем для инспектора
     [SerializeField] private UnitType m_heroClass = UnitType.Warrior;
     [SerializeField] private int m_maxRounds = 10;
 
-    // Код-стайл: префикс m_
     private Unit m_hero;
     private Unit m_enemy;
 
-    // Явно пишем private
     private void Awake()
     {
         if (m_heroClass == UnitType.Mage)
@@ -39,7 +36,6 @@ public class Arena : MonoBehaviour
 
     private void Start()
     {
-        // Перевод enum в строку для красивого вывода
         Debug.Log(m_hero.unitClass.ToString() + " (" + m_hero.health + " HP) против " + m_enemy.unitClass.ToString() + " (" + m_enemy.health + " HP)");
 
         for (int round = 1; round <= m_maxRounds; round++)
