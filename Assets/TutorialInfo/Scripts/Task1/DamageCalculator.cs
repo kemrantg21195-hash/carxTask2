@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class DamageCalculator : MonoBehaviour
 {
-    [SerializeField] private int m_baseDamage = 10;
-    [SerializeField] private int m_armor = 3;
-    [SerializeField] private Element m_weaponElement = Element.Fire; 
-    [SerializeField] private Element m_targetElement = Element.Ice;  
-    [SerializeField] private float m_critChance = 0.3f;
+    [SerializeField, Min(0)] private int m_baseDamage = 10;
+    [SerializeField, Min(0)] private int m_armor = 3;
+    [SerializeField] private Element m_weaponElement = Element.Fire;
+    [SerializeField] private Element m_targetElement = Element.Ice;
+    [SerializeField, Range(0f, 1f)] private float m_critChance = 0.3f;
 
-    private int m_hitCount = 0; 
+    private int m_hitCount = 0;
 
     private void Start()
     {
@@ -30,10 +30,13 @@ public class DamageCalculator : MonoBehaviour
                 out bool isCrit, 
                 out float elemMult);
 
-            string elemInfo = elemMult == 1.5f ? "стихия х1,5" : (elemMult == 0f ? "стихии совпали" : "без стихии");
+            string elemInfo = elemMult == DamageUtility.ElementBonus 
+                ? "стихия х1,5" 
+                : (elemMult == 0f ? "стихии совпали" : "без стихии");
+            
             string critInfo = isCrit ? "крит х2" : "без крита";
 
-            Debug.Log("Удар " + m_hitCount + ": " + dmg + " урона (" + elemInfo + ", " + critInfo + ")");
+            Debug.Log($"Удар {m_hitCount}: {dmg} урона ({elemInfo}, {critInfo})");
         }
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Colisium : MonoBehaviour
 {
-    [SerializeField] private int m_maxRounds = 10;
+    [SerializeField, Min(1)] private int m_maxRounds = 10;
 
     private List<Fighter> m_heroes = new List<Fighter>();
     private List<Fighter> m_enemies = new List<Fighter>();
@@ -28,7 +28,7 @@ public class Colisium : MonoBehaviour
 
         for (int round = 1; round <= m_maxRounds; round++)
         {
-            Debug.Log("Раунд " + round);
+            Debug.Log($"Раунд {round}");
 
             ProcessTeamTurn(m_heroes, m_enemies);
             if (GetAliveUnit(m_enemies) == null) break;
@@ -64,11 +64,11 @@ public class Colisium : MonoBehaviour
             int dmg = attacker.CalculateDamage(target);
             target.TakeDamage(dmg);
             
-            Debug.Log(attacker.unitClass.ToString() + " бьёт " + target.unitClass.ToString() + " из " + attacker.weapon.name + " на " + dmg + " урона (осталось " + target.health + " HP)");
+            Debug.Log($"{attacker.unitClass} бьёт {target.unitClass} из {attacker.weapon.name} на {dmg} урона (осталось {target.health} HP)");
 
             if (target.health == 0)
             {
-                Debug.Log(target.unitClass.ToString() + " погиб!");
+                Debug.Log($"{target.unitClass} погиб!");
                 
                 Fighter aliveAttacker = GetAliveUnit(attackers);
                 if (aliveAttacker != null)
