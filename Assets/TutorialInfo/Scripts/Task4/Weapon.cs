@@ -1,12 +1,11 @@
-
 public class Weapon
 {
-    public string name;
-    public int damage;
-    public string element;
-    public float critChance;
+    public string name { get; private set; }
+    public int damage { get; private set; }
+    public Element element { get; private set; } 
+    public float critChance { get; private set; }
 
-    public Weapon(string name, int damage, string element, float critChance)
+    public Weapon(string name, int damage, Element element, float critChance)
     {
         this.name = name;
         this.damage = damage;

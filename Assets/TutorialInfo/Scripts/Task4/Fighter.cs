@@ -2,12 +2,13 @@ using UnityEngine;
 
 public class Fighter : Unit
 {
-    public int armor;
-    public string element;
-    public Weapon weapon;
-    public Inventory inventory;
+    public int armor { get; private set; }
+    public Element element { get; private set; }
+    public Weapon weapon { get; private set; }
+    public Inventory inventory { get; private set; }
 
-    public Fighter(string unitClass, int health, int armor, string element, Weapon weapon) 
+    // Конструктор должен принимать UnitType и Element
+    public Fighter(UnitType unitClass, int health, int armor, Element element, Weapon weapon) 
         : base(unitClass, health, 0, 0)
     {
         this.armor = armor;
@@ -20,28 +21,14 @@ public class Fighter : Unit
 
     public int CalculateDamage(Fighter target)
     {
-        int damage = weapon.damage - target.armor;
-        if (damage < 1) damage = 1;
-
-        if (weapon.element != "" && target.element != "")
-        {
-            if (weapon.element == target.element)
-            {
-                damage = 0;
-            }
-            else if ((weapon.element == "огонь" && target.element == "лед") ||
-                     (weapon.element == "лед" && target.element == "огонь"))
-            {
-                damage = Mathf.FloorToInt(damage * 1.5f);
-            }
-        }
-
-        if (Random.Range(0f, 1f) < weapon.critChance)
-        {
-            damage *= 2;
-        }
-
-        return damage;
+        return DamageUtility.CalculateDamage(
+            weapon.damage, 
+            target.armor, 
+            weapon.element, 
+            target.element, 
+            weapon.critChance, 
+            out _, 
+            out _); 
     }
 
     public void TryPickUpWeapon(Weapon droppedWeapon)
